@@ -1,0 +1,41 @@
+{
+    "en": {
+      "pageTitleSkills": "About Me – Skills & Demos",
+      "pageTitleMindfulness": "About Me – Mindfulness & Inspiration",
+      "languageSectionTitle": "Language Demonstration",
+      "demoText": "I am a proficient software developer...",
+      "langToggle": "Switch to Dutch",
+      "asteroidSectionTitle": "Asteroid Drawing Demo",
+      "contrastSectionTitle": "Contrast Change Demo",
+      "contrastInstruction": "Adjust the slider to change the background contrast:",
+      "drawingSectionTitle": "Fun Custom Drawing",
+      "drawingCaption": "Custom Made Drawing",
+      "mindfulnessSectionTitle": "Mindfulness",
+      "mindfulnessText": "Mindfulness is the practice...",
+      "benefitsSectionTitle": "Benefits of Mindfulness",
+      "benefit1": "Improves focus: Strengthens attention control...",
+      "benefit2": "Enhances emotional regulation...",
+      "benefit3": "Promotes well-being...",
+      "quotesSectionTitle": "Work Inspiration Quotes"
+    },
+    "nl": {
+      "pageTitleSkills": "Over Mij – Vaardigheden & Demonstraties",
+      "pageTitleMindfulness": "Over Mij – Mindfulness & Inspiratie",
+      "languageSectionTitle": "Taal Demonstratie",
+      "demoText": "Ik ben een bekwame softwareontwikkelaar...",
+      "langToggle": "Schakel naar Engels",
+      "asteroidSectionTitle": "Asteroïde Teken Demo",
+      "contrastSectionTitle": "Demonstratie van het Contrast",
+      "contrastInstruction": "Pas de schuifregelaar aan om het achtergrondcontrast te wijzigen:",
+      "drawingSectionTitle": "Leuke Aangepaste Tekening",
+      "drawingCaption": "Op maat gemaakte tekening",
+      "mindfulnessSectionTitle": "Mindfulness",
+      "mindfulnessText": "Mindfulness is de praktijk...",
+      "benefitsSectionTitle": "Voordelen van Mindfulness",
+      "benefit1": "Verbetert focus...",
+      "benefit2": "Verhoogt emotionele regulatie...",
+      "benefit3": "Bevordert welzijn...",
+      "quotesSectionTitle": "Inspirerende Werk Citaten"
+    }
+  }
+  

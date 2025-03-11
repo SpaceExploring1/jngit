@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Click Tracking Web App</title>
+  <style>
+    /* Styling for layout and responsiveness */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      background: #f9f9f9;
+    }
+    canvas {
+      display: block;
+      margin: 20px auto;
+      max-width: 600px;
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    #clickArea {
+      display: inline-block;
+      margin: 20px auto;
+      padding: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: #4CAF50;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s;
+    }
+    #clickArea:hover {
+      background: #45a049;
+    }
+    #clickCountDisplay {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <h1>Click Tracking Web App</h1>
+  <p>Click on the button below to track clicks per second.</p>
+  
+  <div id="clickArea">Click Here to Count</div>
+  
+  <canvas id="myChart"></canvas>
+
+  <div id="clickCountDisplay">Click Count: 0</div>
+
+  <script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    let labels = [];
+    let clickCounts = [];
+    let clickCounter = 0;
+    let startTime = Math.floor(Date.now() / 1000); // Store start time in seconds
+
+    // Initialize the chart
+    const myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Clicks Per Second',
+          data: clickCounts,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: false,
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Seconds Since Start' // Shows time in seconds
+            }
+          },
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Clicks Per Second'
+            }
+          }
+        }
+      }
+    });
+
+    // Track clicks per second
+    document.getElementById('clickArea').addEventListener('click', function() {
+      clickCounter++;
+      document.getElementById('clickCountDisplay').innerText = `Click Count: ${clickCounter}`;
+
+      let currentTime = Math.floor(Date.now() / 1000) - startTime; // Convert to seconds since start
+      let lastIndex = labels.indexOf(currentTime);
+
+      if (lastIndex !== -1) {
+        // If the second already exists, increase the count
+        clickCounts[lastIndex]++;
+      } else {
+        // Otherwise, add a new data point
+        labels.push(currentTime);
+        clickCounts.push(1);
+      }
+
+      // Keep only the last 20 values on the chart
+      if (labels.length > 20) {
+        labels.shift();
+        clickCounts.shift();
+      }
+
+      // Update the chart with the new data
+      myChart.update();
+    });
+
+  </script>
+
+</body>
+</html>
