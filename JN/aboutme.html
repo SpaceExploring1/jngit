@@ -161,11 +161,30 @@
       z-index: 10;  /* Ensure the text appears above other elements */
       position: relative;
     }
+    #logo-placeholder {
+  position: absolute;
+  top: 100px; /* Moves it further below the navbar */
+  right: 40px;
+  width: 180px; /* Increased width */
+  height: 120px; /* Increased height */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+#logo-placeholder img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
   </style>
 </head>
 <body>
   <!-- p5.js Interactive Background -->
   <div id="background"></div>
+  <div id="logo-placeholder"><img src="JN_good Logo.svg" alt=""></div>
 
   <!-- Header: Navbar + Internal Section Selector & Contrast Toggle -->
   <header>
