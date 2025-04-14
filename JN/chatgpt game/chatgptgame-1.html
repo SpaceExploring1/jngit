@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Pac-Man</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: rgb(5, 0, 103);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    canvas {
+      border: 4px solid #001f4d;
+      box-shadow: 0 0 20px #00f;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
+</head>
+<body>
+
+<script>
+const config = {
+  type: Phaser.AUTO,
+  width: 400,
+  height: 400,
+  backgroundColor: '#000000',
+  physics: {
+    default: 'arcade',
+    arcade: {
+      debug: false,
+    }
+  },
+  scene: {
+    preload,
+    create,
+    update
+  }
+};
+
+const game = new Phaser.Game(config);
+
+let pacman, pacmanGraphics;
+let direction = 'right';
+let mouthOpen = true;
+let mouthTimer = 0;
+let jellyfish;
+let dots;
+let score = 0;
+let scoreText;
+let lastScoreText;
+let gameOver = false;
+let jellySpeed = 60;
+let timeSinceStart = 0;
+
+function preload() {}
+
+function create() {
+  score = 0;
+  gameOver = false;
+  jellySpeed = 60;
+  timeSinceStart = 0;
+
+  pacmanGraphics = this.add.graphics();
+
+  scoreText = this.add.text(10, 10, 'Score: 0', {
+    fontSize: '16px',
+    fill: '#00f',
+    fontFamily: 'monospace',
+    fontStyle: 'bold'
+  });
+
+  const savedScore = sessionStorage.getItem('lastScore');
+  if (savedScore) {
+    lastScoreText = this.add.text(10, 28, 'Last: ' + savedScore, {
+      fontSize: '14px',
+      fill: '#00f',
+      fontFamily: 'monospace'
+    });
+  }
+
+  pacman = this.physics.add.image(200, 200).setCircle(10);
+  pacman.setCollideWorldBounds(true);
+
+  jellyfish = this.physics.add.image(300, 200).setCircle(10);
+  jellyfish.setCollideWorldBounds(true);
+
+  dots = this.physics.add.group();
+  createDots();
+
+  this.physics.add.overlap(pacman, dots, collectDot, null, this);
+  this.physics.add.overlap(pacman, jellyfish, hitEnemy, null, this);
+
+  this.input.keyboard.on('keydown-W', () => {
+    pacman.setVelocity(0, -150);
+    direction = 'up';
+  });
+  this.input.keyboard.on('keydown-S', () => {
+    pacman.setVelocity(0, 150);
+    direction = 'down';
+  });
+  this.input.keyboard.on('keydown-A', () => {
+    pacman.setVelocity(-150, 0);
+    direction = 'left';
+  });
+  this.input.keyboard.on('keydown-D', () => {
+    pacman.setVelocity(150, 0);
+    direction = 'right';
+  });
+
+  this.input.keyboard.on('keydown-R', () => {
+    if (gameOver) {
+      this.scene.restart();
+    }
+  });
+}
+
+function createDots() {
+  for (let x = 40; x < 400; x += 40) {
+    for (let y = 40; y < 400; y += 40) {
+      let dot = dots.create(x, y, null);
+      dot.setDisplaySize(4, 4);
+      dot.body.setCircle(2);
+    }
+  }
+}
+
+function update(time, delta) {
+  if (gameOver) return;
+
+  timeSinceStart += delta;
+
+  // Versnellen van de kwal elke 10 seconden
+  if (timeSinceStart >= 10000) {
+    jellySpeed += 5;
+    timeSinceStart = 0;
+  }
+
+  pacmanGraphics.clear();
+
+  // Mond animatie
+  mouthTimer += delta;
+  if (mouthTimer > 150) {
+    mouthOpen = !mouthOpen;
+    mouthTimer = 0;
+  }
+
+  const x = pacman.x;
+  const y = pacman.y;
+  const radius = 12;
+  const openAngle = mouthOpen ? 0.35 : 0.1;
+  let startAngle = 0;
+  let endAngle = 0;
+
+  switch (direction) {
+    case 'right': startAngle = openAngle; endAngle = Math.PI * 2 - openAngle; break;
+    case 'left': startAngle = Math.PI + openAngle; endAngle = Math.PI - openAngle; break;
+    case 'up': startAngle = 1.5 * Math.PI + openAngle; endAngle = 1.5 * Math.PI - openAngle; break;
+    case 'down': startAngle = 0.5 * Math.PI + openAngle; endAngle = 0.5 * Math.PI - openAngle; break;
+  }
+
+  // Pac-Man tekenen
+  pacmanGraphics.fillStyle(0xffff00, 1);
+  pacmanGraphics.beginPath();
+  pacmanGraphics.slice(x, y, radius, startAngle, endAngle, false);
+  pacmanGraphics.lineTo(x, y);
+  pacmanGraphics.closePath();
+  pacmanGraphics.fillPath();
+
+  // Oog van Pac-Man
+  let eyeX = x + (direction === 'left' ? -4 : direction === 'right' ? 4 : 0);
+  let eyeY = y + (direction === 'up' ? -6 : direction === 'down' ? 3 : -6);
+  pacmanGraphics.fillStyle(0x000000, 1);
+  pacmanGraphics.fillCircle(eyeX, eyeY, 2);
+
+  // Jellyfish tekenen
+  drawJellyfish(pacmanGraphics, jellyfish.x, jellyfish.y);
+
+  // Beweeg jellyfish richting Pac-Man
+  this.physics.moveToObject(jellyfish, pacman, jellySpeed);
+
+  // Dotjes tekenen
+  pacmanGraphics.fillStyle(0x00ff00, 1);
+  dots.children.iterate(dot => {
+    if (dot.active) {
+      pacmanGraphics.fillCircle(dot.x, dot.y, 2);
+    }
+  });
+
+  // Respawn als alle dotjes op zijn
+  if (dots.countActive(true) === 0) {
+    createDots();
+  }
+}
+
+function drawJellyfish(graphics, x, y) {
+  graphics.fillStyle(0x9900ff, 1);
+  graphics.fillCircle(x, y, 10);
+
+  graphics.lineStyle(2, 0x66ccff, 1);
+  graphics.beginPath();
+  graphics.moveTo(x - 5, y + 5);
+  graphics.lineTo(x - 5, y + 12);
+  graphics.moveTo(x, y + 5);
+  graphics.lineTo(x, y + 13);
+  graphics.moveTo(x + 5, y + 5);
+  graphics.lineTo(x + 5, y + 12);
+  graphics.strokePath();
+
+  // Ogen
+  graphics.fillStyle(0xffffff, 1);
+  graphics.fillCircle(x - 3, y - 3, 2);
+  graphics.fillCircle(x + 3, y - 3, 2);
+  graphics.fillStyle(0x000000, 1);
+  graphics.fillCircle(x - 3, y - 3, 1);
+  graphics.fillCircle(x + 3, y - 3, 1);
+}
+
+function collectDot(player, dot) {
+  dot.disableBody(true, true);
+  score += 10;
+  scoreText.setText('Score: ' + score);
+}
+
+function hitEnemy(player, enemy) {
+  if (gameOver) return;
+  gameOver = true;
+  pacman.setVelocity(0, 0);
+  jellyfish.setVelocity(0, 0);
+  this.physics.world.pause();
+  pacman.setTint(0xff0000);
+  scoreText.setText('💀 Game Over! Score: ' + score + ' - Press R');
+  sessionStorage.setItem('lastScore', score);
+}
+</script>
+
+</body>
+</html>
