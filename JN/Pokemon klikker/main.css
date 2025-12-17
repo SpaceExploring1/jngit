@@ -1,0 +1,20 @@
+/* Minimal page layout for the standalone Pokemon Number Generator */
+:root {
+  --bg: #0f1114;
+  --fg: #e9eef7;
+}
+html,body{height:100%;}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(180deg,var(--bg), #111213 80%);
+  color:var(--fg);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+}
+#root{width:100%;max-width:740px;padding:1.25rem;}
+header.page-title{ text-align:center;margin-bottom:0.5rem }
+header.page-title h1{ font-size:1.6rem;margin:0 }
+footer.small{ text-align:center;color:#9aa6bd;margin-top:1rem }

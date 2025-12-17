@@ -1,0 +1,22 @@
+{
+  "types": [
+    { "name": "Normal", "color": "#A8A77A", "icon": "🔰" },
+    { "name": "Fire", "color": "#EE8130", "icon": "🔥" },
+    { "name": "Water", "color": "#6390F0", "icon": "💧" },
+    { "name": "Electric", "color": "#F7D02C", "icon": "⚡" },
+    { "name": "Grass", "color": "#7AC74C", "icon": "🍃" },
+    { "name": "Ice", "color": "#96D9D6", "icon": "❄️" },
+    { "name": "Fighting", "color": "#C22E28", "icon": "🥊" },
+    { "name": "Poison", "color": "#A33EA1", "icon": "☠️" },
+    { "name": "Ground", "color": "#E2BF65", "icon": "🪨" },
+    { "name": "Flying", "color": "#A98FF3", "icon": "🕊️" },
+    { "name": "Psychic", "color": "#F95587", "icon": "🔮" },
+    { "name": "Bug", "color": "#A6B91A", "icon": "🐛" },
+    { "name": "Rock", "color": "#B6A136", "icon": "🪨" },
+    { "name": "Ghost", "color": "#735797", "icon": "👻" },
+    { "name": "Dragon", "color": "#6F35FC", "icon": "🐉" },
+    { "name": "Dark", "color": "#705746", "icon": "🌑" },
+    { "name": "Steel", "color": "#B7B7CE", "icon": "⚙️" },
+    { "name": "Fairy", "color": "#D685AD", "icon": "✨" }
+  ]
+}
